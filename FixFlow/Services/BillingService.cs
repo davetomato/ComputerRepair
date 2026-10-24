@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
 using FixFlow.Data;
 using FixFlow.Models;
+using System.Data;
+using Microsoft.Data.SqlClient;
 
 namespace FixFlow.Services
 {
@@ -72,6 +75,35 @@ namespace FixFlow.Services
             Payment payment = new Payment(0, orderId, amount, DateTime.Now);
             _payments.Add(payment);
             return payment;
+        }
+
+        // ===== Newly Added Methods =====
+
+        public DataTable GetOrderBalances()
+        {
+            AccessControl.RequireRole(UserRole.Administrator, UserRole.Receptionist);
+
+            DataTable table = new DataTable();
+            using (SqlConnection conn = Database.GetConnection())
+            using (SqlCommand cmd = new SqlCommand(
+                "SELECT OrderId, Customer, TotalCost, AmountPaid, Balance " +
+                "FROM dbo.vw_OrderBalances ORDER BY OrderId DESC", conn))
+            using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+            {
+                adapter.Fill(table);
+            }
+            return table;
+        }
+
+        public decimal GetCollectedToday()
+        {
+            AccessControl.RequireRole(UserRole.Administrator, UserRole.Receptionist);
+
+            decimal total = 0m;
+            foreach (Payment p in _payments.GetAll())
+                if (p.PaymentDate.Date == DateTime.Today)
+                    total += p.Amount;
+            return total;
         }
     }
 }

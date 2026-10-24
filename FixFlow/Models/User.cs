@@ -74,7 +74,7 @@ namespace FixFlow.Models
         }
     }
 
-    
+
     public class Administrator : User
     {
         public Administrator() { }
@@ -88,11 +88,8 @@ namespace FixFlow.Models
 
         public override IList<string> GetAllowedMenus()
         {
-            return new List<string>
-            {
-                "Repair Board", "Customers", "Devices", "Parts",
-                "Payments", "Reports", "Users"
-            };
+            return new List<string> { "Workflow Board", "Repair Orders", "Customers & Devices",
+                          "Parts Inventory", "Payments", "Reports", "Users & Rates" };
         }
     }
 
@@ -109,7 +106,7 @@ namespace FixFlow.Models
 
         public override IList<string> GetAllowedMenus()
         {
-            return new List<string> { "Repair Board", "Customers", "Devices", "Payments" };
+            return new List<string> { "Workflow Board", "Customers & Devices", "Payments" }; // <-- Combined here
         }
     }
 
@@ -126,7 +123,7 @@ namespace FixFlow.Models
 
         public override IList<string> GetAllowedMenus()
         {
-            return new List<string> { "Repair Board", "Parts" };
+            return new List<string> { "Workflow Board", "Parts Inventory" };
         }
     }
 }

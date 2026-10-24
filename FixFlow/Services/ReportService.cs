@@ -24,12 +24,8 @@ namespace FixFlow.Services
                   WHERE DateIn >= @From AND DateIn < DATEADD(DAY, 1, @To)
                   GROUP BY Status
                   ORDER BY CASE Status
-                               WHEN 'Received'   THEN 1
-                               WHEN 'Diagnosing' THEN 2
-                               WHEN 'Repairing'  THEN 3
-                               WHEN 'Testing'    THEN 4
-                               WHEN 'Completed'  THEN 5
-                               WHEN 'Released'   THEN 6
+                               WHEN 'Received' THEN 1 WHEN 'Diagnosing' THEN 2 WHEN 'Waiting for Parts' THEN 3
+WHEN 'Repairing' THEN 4 WHEN 'Ready for Pickup' THEN 5 WHEN 'Released' THEN 6
                            END",
                 from, to);
         }

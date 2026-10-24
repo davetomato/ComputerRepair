@@ -86,26 +86,25 @@ namespace FixFlow.Services
             {
                 if (order.TechnicianId != user.UserId)
                     throw new InvalidOperationException("You can only update repairs assigned to you.");
-                if (newStatus == RepairStatus.Released || previous == RepairStatus.Released)
-                    throw new InvalidOperationException(
-                        "Only the receptionist or administrator can release a device.");
+                if (newStatus == RepairStatus.Released || newStatus == RepairStatus.ReadyForPickup || previous == RepairStatus.Released)
+                    throw new InvalidOperationException("Only the receptionist or administrator can finalize or release a device.");
             }
 
             if (!order.CanMoveTo(newStatus))
-                throw new InvalidOperationException(
-                    "Cannot move a repair from " + previous + " to " + newStatus + ".");
+                throw new InvalidOperationException("Invalid status transition from " + order.StatusString + ".");
 
             if (newStatus == RepairStatus.Repairing && order.TechnicianId <= 0)
                 throw new InvalidOperationException("Assign a technician before the repair starts.");
 
+            // Rule: Do not allow moving to Ready for Pickup before repair is completed and payment is confirmed
+            if (newStatus == RepairStatus.ReadyForPickup && _billing.GetBalance(order) > 0)
+                throw new InvalidOperationException("The repair balance must be fully paid before marking Ready for Pickup.");
+
+            // Rule: Do not allow moving to Released before pickup is confirmed
             if (newStatus == RepairStatus.Released && _billing.GetBalance(order) > 0)
-                throw new InvalidOperationException(
-                    "The balance must be fully paid before the device is released.");
+                throw new InvalidOperationException("The balance must be fully paid before the device is released.");
 
             order.MoveTo(newStatus);
-            if (previous == RepairStatus.Released)
-                order.DateOut = null;
-
             _orders.Update(order);
         }
 
@@ -113,9 +112,16 @@ namespace FixFlow.Services
         {
             AccessControl.RequireRole(UserRole.Administrator, UserRole.Receptionist);
 
-            User technician = _users.GetById(technicianId);
-            if (technician == null || technician.Role != UserRole.Technician)
-                throw new InvalidOperationException("Choose a user with the Technician role.");
+            if (technicianId > 0)
+            {
+                User technician = _users.GetById(technicianId);
+                if (technician == null || technician.Role != UserRole.Technician)
+                    throw new InvalidOperationException("Choose a user with the Technician role.");
+            }
+            else
+            {
+                technicianId = 0;   // saved as NULL
+            }
 
             RepairOrder order = LoadEditable(orderId);
             order.TechnicianId = technicianId;
@@ -133,6 +139,52 @@ namespace FixFlow.Services
 
             order.Diagnosis = diagnosis;
             order.HoursWorked = hoursWorked;
+            _orders.Update(order);
+        }
+
+        public void StartDiagnosis(int orderId)
+        {
+            AccessControl.RequireLogin();
+            RepairOrder order = Load(orderId);
+            if (order.Status != RepairStatus.Received)
+                throw new InvalidOperationException("Order must be in Received status to start diagnosis.");
+
+            order.MoveTo(RepairStatus.Diagnosing);
+            _orders.Update(order);
+        }
+
+        public void SubmitDiagnosis(int orderId, string diagnosis, decimal hoursWorked)
+        {
+            AccessControl.RequireLogin();
+            if (string.IsNullOrWhiteSpace(diagnosis))
+                throw new ArgumentException("Diagnosis description is required.");
+
+            RepairOrder order = LoadEditable(orderId);
+            User user = Session.CurrentUser;
+            if (user.Role == UserRole.Technician && order.TechnicianId != user.UserId)
+                throw new InvalidOperationException("You can only update repairs assigned to you.");
+
+            order.Diagnosis = diagnosis.Trim();
+            order.HoursWorked = hoursWorked;
+
+            if (order.Status == RepairStatus.Diagnosing)
+            {
+                order.MoveTo(RepairStatus.WaitingForParts);
+            }
+            _orders.Update(order);
+        }
+
+        public void ProceedToRepair(int orderId)
+        {
+            AccessControl.RequireLogin();
+            RepairOrder order = LoadEditable(orderId);
+            if (order.Status != RepairStatus.WaitingForParts)
+                throw new InvalidOperationException("Order must be Waiting for Parts to proceed to Repairing.");
+
+            if (order.TechnicianId <= 0)
+                throw new InvalidOperationException("Assign a technician before proceeding to repair.");
+
+            order.MoveTo(RepairStatus.Repairing);
             _orders.Update(order);
         }
 

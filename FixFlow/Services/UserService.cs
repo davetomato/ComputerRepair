@@ -17,7 +17,7 @@ namespace FixFlow.Services
 
         public List<User> GetTechnicians()
         {
-            AccessControl.RequireRole(UserRole.Administrator, UserRole.Receptionist);
+            AccessControl.RequireLogin();
             return _users.GetByRole(UserRole.Technician);
         }
 

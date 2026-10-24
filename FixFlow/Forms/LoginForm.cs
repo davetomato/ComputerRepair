@@ -51,9 +51,9 @@ namespace FixFlow.Forms
 
             if (user != null)
             {
-                MainForm mainForm = new MainForm();
+                MainDashboard mainDashboard = new MainDashboard(user);
                 this.Hide();
-                mainForm.ShowDialog();
+                mainDashboard.ShowDialog();
                 this.Close();
             }
             else

@@ -18,6 +18,7 @@ namespace FixFlow.Data
             "FROM dbo.OrderParts AS op " +
             "JOIN dbo.RepairOrders AS o ON o.OrderId = op.OrderId ";
 
+
         private static RepairOrder Read(SqlDataReader reader)
         {
             ServiceType serviceType = ServiceType.Create(reader.GetString(3), reader.GetDecimal(4));
@@ -31,7 +32,15 @@ namespace FixFlow.Data
                 order.TechnicianId = reader.GetInt32(2);
             order.Diagnosis = DbHelper.GetStringOrEmpty(reader, 6);
             order.HoursWorked = reader.GetDecimal(7);
-            order.LoadStatus((RepairStatus)Enum.Parse(typeof(RepairStatus), reader.GetString(8)));
+
+            // Updated status parsing
+            string statusStr = reader.GetString(8);
+            RepairStatus parsedStatus = RepairStatus.Received;
+            if (statusStr == "Waiting for Parts") parsedStatus = RepairStatus.WaitingForParts;
+            else if (statusStr == "Ready for Pickup") parsedStatus = RepairStatus.ReadyForPickup;
+            else Enum.TryParse(statusStr, out parsedStatus);
+            order.LoadStatus(parsedStatus);
+
             order.DateIn = reader.GetDateTime(9);
             if (!reader.IsDBNull(10))
                 order.DateOut = reader.GetDateTime(10);
@@ -161,7 +170,7 @@ namespace FixFlow.Data
                     cmd.Parameters.AddWithValue("@Problem", order.Problem);
                     cmd.Parameters.AddWithValue("@Diagnosis", DbHelper.ToDbValue(order.Diagnosis));
                     cmd.Parameters.AddWithValue("@HoursWorked", order.HoursWorked);
-                    cmd.Parameters.AddWithValue("@Status", order.Status.ToString());
+                    cmd.Parameters.AddWithValue("@Status", order.StatusString);
                     cmd.Parameters.AddWithValue("@DateIn", order.DateIn);
                     conn.Open();
                     order.OrderId = (int)cmd.ExecuteScalar();
@@ -197,7 +206,7 @@ namespace FixFlow.Data
                     cmd.Parameters.AddWithValue("@Problem", order.Problem);
                     cmd.Parameters.AddWithValue("@Diagnosis", DbHelper.ToDbValue(order.Diagnosis));
                     cmd.Parameters.AddWithValue("@HoursWorked", order.HoursWorked);
-                    cmd.Parameters.AddWithValue("@Status", order.Status.ToString());
+                    cmd.Parameters.AddWithValue("@Status", order.StatusString); // Added parameter here
                     cmd.Parameters.AddWithValue("@DateOut",
                         order.DateOut.HasValue ? (object)order.DateOut.Value : DBNull.Value);
                     conn.Open();

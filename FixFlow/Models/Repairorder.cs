@@ -3,12 +3,11 @@ using System.Collections.Generic;
 
 namespace FixFlow.Models
 {
-    
     public class RepairOrder
     {
         private int _orderId;
         private int _deviceId;
-        private int _technicianId;                 
+        private int _technicianId;
         private ServiceType _serviceType;
         private string _problem = string.Empty;
         private string _diagnosis = string.Empty;
@@ -40,7 +39,6 @@ namespace FixFlow.Models
             set { _deviceId = value; }
         }
 
-        
         public int TechnicianId
         {
             get { return _technicianId; }
@@ -86,16 +84,31 @@ namespace FixFlow.Models
             }
         }
 
-        
         public RepairStatus Status
         {
             get { return _status; }
         }
 
-        
         public void LoadStatus(RepairStatus status)
         {
             _status = status;
+        }
+
+        public string StatusString
+        {
+            get
+            {
+                switch (_status)
+                {
+                    case RepairStatus.Received: return "Received";
+                    case RepairStatus.Diagnosing: return "Diagnosing";
+                    case RepairStatus.WaitingForParts: return "Waiting for Parts";
+                    case RepairStatus.Repairing: return "Repairing";
+                    case RepairStatus.ReadyForPickup: return "Ready for Pickup";
+                    case RepairStatus.Released: return "Released";
+                    default: return _status.ToString();
+                }
+            }
         }
 
         public DateTime DateIn
@@ -122,7 +135,6 @@ namespace FixFlow.Models
             _parts.Add(part);
         }
 
-        
         public decimal ComputeLaborFee()
         {
             if (_serviceType == null)
@@ -146,18 +158,29 @@ namespace FixFlow.Models
             get { return ComputeLaborFee() + PartsCost; }
         }
 
-        
         public bool CanMoveTo(RepairStatus next)
         {
-            int difference = Math.Abs((int)next - (int)_status);
-            return difference == 1;
+            switch (_status)
+            {
+                case RepairStatus.Received:
+                    return next == RepairStatus.Diagnosing;
+                case RepairStatus.Diagnosing:
+                    return next == RepairStatus.WaitingForParts;
+                case RepairStatus.WaitingForParts:
+                    return next == RepairStatus.Repairing;
+                case RepairStatus.Repairing:
+                    return next == RepairStatus.ReadyForPickup;
+                case RepairStatus.ReadyForPickup:
+                    return next == RepairStatus.Released;
+                default:
+                    return false;
+            }
         }
 
         public void MoveTo(RepairStatus next)
         {
             if (!CanMoveTo(next))
-                throw new InvalidOperationException(
-                    "Cannot move a repair from " + _status + " to " + next + ".");
+                throw new InvalidOperationException("Invalid status transition from " + StatusString + " to " + next + ".");
             _status = next;
             if (next == RepairStatus.Released)
                 _dateOut = DateTime.Now;

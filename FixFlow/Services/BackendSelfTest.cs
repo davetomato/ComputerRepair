@@ -116,6 +116,11 @@ namespace FixFlow.Services
                     () => repairs.MoveOrder(orderId, RepairStatus.Repairing));
 
                 repairs.MoveOrder(orderId, RepairStatus.Diagnosing);
+
+                // Test moving to Waiting for Parts and back to Repairing
+                repairs.MoveOrder(orderId, RepairStatus.WaitingForParts);
+                check("repair reached Waiting for Parts", repairs.GetOrder(orderId).Status == RepairStatus.WaitingForParts);
+
                 repairs.MoveOrder(orderId, RepairStatus.Repairing);
                 check("repair reached Repairing", repairs.GetOrder(orderId).Status == RepairStatus.Repairing);
 
@@ -124,7 +129,7 @@ namespace FixFlow.Services
                 {
                     Session.Start(otherTechnician);
                     expectError("a technician cannot move another technician's repair",
-                        () => repairs.MoveOrder(orderId, RepairStatus.Testing));
+                        () => repairs.MoveOrder(orderId, RepairStatus.ReadyForPickup));
                 }
                 else
                 {
@@ -132,11 +137,10 @@ namespace FixFlow.Services
                 }
 
                 Session.Start(technician);
-                repairs.MoveOrder(orderId, RepairStatus.Testing);
-                check("the assigned technician can move the repair", repairs.GetOrder(orderId).Status == RepairStatus.Testing);
+                repairs.MoveOrder(orderId, RepairStatus.ReadyForPickup);
+                check("the assigned technician can move the repair to Ready for Pickup", repairs.GetOrder(orderId).Status == RepairStatus.ReadyForPickup);
 
                 Session.Start(admin);
-                repairs.MoveOrder(orderId, RepairStatus.Completed);
                 expectError("release is blocked while a balance is unpaid",
                     () => repairs.MoveOrder(orderId, RepairStatus.Released));
 

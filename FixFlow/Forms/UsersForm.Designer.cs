@@ -28,146 +28,262 @@
         /// </summary>
         private void InitializeComponent()
         {
+            pnlHeader = new Panel();
+            btnAddUser = new Button();
+            lblTitle = new Label();
+            pnlHeaderLine = new Panel();
+            pnlBody = new Panel();
+            tblUsers = new TableLayoutPanel();
+            cardUsers = new FixFlow.UI.CardPanel();
             dgvUsers = new DataGridView();
-            grpUser = new GroupBox();
-            label1 = new Label();
-            txtUsername = new TextBox();
-            label2 = new Label();
-            txtPassword = new TextBox();
-            cmbRole = new ComboBox();
-            label3 = new Label();
-            btnCreateUser = new Button();
+            pnlUserActions = new Panel();
             btnDeleteUser = new Button();
+            lblUsersTitle = new Label();
+            cardRates = new FixFlow.UI.CardPanel();
+            panel1 = new Panel();
+            btnSaveRate = new Button();
+            txtRate = new FixFlow.UI.InputBox();
+            lblSelectedRate = new Label();
+            dgvRates = new DataGridView();
+            pnlHeader.SuspendLayout();
+            pnlBody.SuspendLayout();
+            tblUsers.SuspendLayout();
+            cardUsers.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvUsers).BeginInit();
-            grpUser.SuspendLayout();
+            pnlUserActions.SuspendLayout();
+            cardRates.SuspendLayout();
+            panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvRates).BeginInit();
             SuspendLayout();
+            // 
+            // pnlHeader
+            // 
+            pnlHeader.BackColor = Color.FromArgb(40, 44, 52);
+            pnlHeader.Controls.Add(btnAddUser);
+            pnlHeader.Controls.Add(lblTitle);
+            pnlHeader.Controls.Add(pnlHeaderLine);
+            pnlHeader.Dock = DockStyle.Top;
+            pnlHeader.Location = new Point(0, 0);
+            pnlHeader.Name = "pnlHeader";
+            pnlHeader.Size = new Size(1012, 64);
+            pnlHeader.TabIndex = 1;
+            // 
+            // btnAddUser
+            // 
+            btnAddUser.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnAddUser.Location = new Point(876, 13);
+            btnAddUser.Name = "btnAddUser";
+            btnAddUser.Size = new Size(130, 38);
+            btnAddUser.TabIndex = 2;
+            btnAddUser.Text = "+ Add User";
+            btnAddUser.UseVisualStyleBackColor = true;
+            // 
+            // lblTitle
+            // 
+            lblTitle.AutoSize = true;
+            lblTitle.Font = new Font("Segoe UI", 16.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblTitle.ForeColor = Color.White;
+            lblTitle.Location = new Point(24, 13);
+            lblTitle.Name = "lblTitle";
+            lblTitle.Size = new Size(223, 38);
+            lblTitle.TabIndex = 1;
+            lblTitle.Text = "Users and Rates";
+            // 
+            // pnlHeaderLine
+            // 
+            pnlHeaderLine.BackColor = Color.FromArgb(55, 61, 72);
+            pnlHeaderLine.Dock = DockStyle.Bottom;
+            pnlHeaderLine.Location = new Point(0, 63);
+            pnlHeaderLine.Name = "pnlHeaderLine";
+            pnlHeaderLine.Size = new Size(1012, 1);
+            pnlHeaderLine.TabIndex = 0;
+            // 
+            // pnlBody
+            // 
+            pnlBody.Controls.Add(tblUsers);
+            pnlBody.Dock = DockStyle.Fill;
+            pnlBody.Location = new Point(0, 64);
+            pnlBody.Name = "pnlBody";
+            pnlBody.Padding = new Padding(24);
+            pnlBody.Size = new Size(1012, 559);
+            pnlBody.TabIndex = 2;
+            // 
+            // tblUsers
+            // 
+            tblUsers.ColumnCount = 2;
+            tblUsers.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tblUsers.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tblUsers.Controls.Add(cardUsers, 0, 0);
+            tblUsers.Controls.Add(cardRates, 1, 0);
+            tblUsers.Dock = DockStyle.Fill;
+            tblUsers.Location = new Point(24, 24);
+            tblUsers.Name = "tblUsers";
+            tblUsers.RowCount = 1;
+            tblUsers.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tblUsers.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tblUsers.Size = new Size(964, 511);
+            tblUsers.TabIndex = 0;
+            // 
+            // cardUsers
+            // 
+            cardUsers.BackColor = Color.FromArgb(40, 44, 52);
+            cardUsers.Controls.Add(dgvUsers);
+            cardUsers.Controls.Add(pnlUserActions);
+            cardUsers.Controls.Add(lblUsersTitle);
+            cardUsers.Dock = DockStyle.Fill;
+            cardUsers.ForeColor = Color.FromArgb(220, 225, 230);
+            cardUsers.Location = new Point(0, 0);
+            cardUsers.Margin = new Padding(0, 0, 7, 0);
+            cardUsers.Name = "cardUsers";
+            cardUsers.Padding = new Padding(16, 52, 16, 16);
+            cardUsers.Size = new Size(475, 511);
+            cardUsers.TabIndex = 0;
             // 
             // dgvUsers
             // 
             dgvUsers.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvUsers.Dock = DockStyle.Left;
-            dgvUsers.Location = new Point(0, 0);
+            dgvUsers.Dock = DockStyle.Fill;
+            dgvUsers.Location = new Point(16, 52);
             dgvUsers.Name = "dgvUsers";
             dgvUsers.RowHeadersWidth = 51;
-            dgvUsers.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvUsers.Size = new Size(300, 450);
-            dgvUsers.TabIndex = 0;
-            dgvUsers.CellClick += this.dgvUsers_CellClick;
+            dgvUsers.Size = new Size(443, 387);
+            dgvUsers.TabIndex = 3;
             // 
-            // grpUser
+            // pnlUserActions
             // 
-            grpUser.Controls.Add(btnDeleteUser);
-            grpUser.Controls.Add(btnCreateUser);
-            grpUser.Controls.Add(label3);
-            grpUser.Controls.Add(cmbRole);
-            grpUser.Controls.Add(txtPassword);
-            grpUser.Controls.Add(label2);
-            grpUser.Controls.Add(txtUsername);
-            grpUser.Controls.Add(label1);
-            grpUser.Dock = DockStyle.Fill;
-            grpUser.Location = new Point(300, 0);
-            grpUser.Name = "grpUser";
-            grpUser.Size = new Size(500, 450);
-            grpUser.TabIndex = 1;
-            grpUser.TabStop = false;
-            grpUser.Text = "User Account Management";
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Location = new Point(43, 90);
-            label1.Name = "label1";
-            label1.Size = new Size(75, 20);
-            label1.TabIndex = 0;
-            label1.Text = "Username";
-            // 
-            // txtUsername
-            // 
-            txtUsername.Location = new Point(181, 87);
-            txtUsername.Name = "txtUsername";
-            txtUsername.Size = new Size(125, 27);
-            txtUsername.TabIndex = 1;
-            // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Location = new Point(43, 141);
-            label2.Name = "label2";
-            label2.Size = new Size(70, 20);
-            label2.TabIndex = 2;
-            label2.Text = "Password";
-            // 
-            // txtPassword
-            // 
-            txtPassword.Location = new Point(181, 141);
-            txtPassword.Name = "txtPassword";
-            txtPassword.Size = new Size(125, 27);
-            txtPassword.TabIndex = 3;
-            txtPassword.UseSystemPasswordChar = true;
-            // 
-            // cmbRole
-            // 
-            cmbRole.FormattingEnabled = true;
-            cmbRole.Location = new Point(181, 202);
-            cmbRole.Name = "cmbRole";
-            cmbRole.Size = new Size(151, 28);
-            cmbRole.TabIndex = 4;
-            // 
-            // label3
-            // 
-            label3.AutoSize = true;
-            label3.Location = new Point(43, 205);
-            label3.Name = "label3";
-            label3.Size = new Size(39, 20);
-            label3.TabIndex = 5;
-            label3.Text = "Role";
-            // 
-            // btnCreateUser
-            // 
-            btnCreateUser.Location = new Point(72, 281);
-            btnCreateUser.Name = "btnCreateUser";
-            btnCreateUser.Size = new Size(110, 29);
-            btnCreateUser.TabIndex = 6;
-            btnCreateUser.Text = "Create User";
-            btnCreateUser.UseVisualStyleBackColor = true;
-            btnCreateUser.Click += this.btnCreateUser_Click;
+            pnlUserActions.Controls.Add(btnDeleteUser);
+            pnlUserActions.Dock = DockStyle.Bottom;
+            pnlUserActions.Location = new Point(16, 439);
+            pnlUserActions.Name = "pnlUserActions";
+            pnlUserActions.Size = new Size(443, 56);
+            pnlUserActions.TabIndex = 2;
             // 
             // btnDeleteUser
             // 
-            btnDeleteUser.Location = new Point(212, 281);
+            btnDeleteUser.Location = new Point(0, 12);
             btnDeleteUser.Name = "btnDeleteUser";
-            btnDeleteUser.Size = new Size(120, 29);
-            btnDeleteUser.TabIndex = 7;
+            btnDeleteUser.Size = new Size(140, 38);
+            btnDeleteUser.TabIndex = 0;
             btnDeleteUser.Text = "Delete User";
             btnDeleteUser.UseVisualStyleBackColor = true;
-            btnDeleteUser.Click += this.btnDeleteUser_Click;
+            // 
+            // lblUsersTitle
+            // 
+            lblUsersTitle.AutoSize = true;
+            lblUsersTitle.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblUsersTitle.ForeColor = Color.FromArgb(160, 168, 178);
+            lblUsersTitle.Location = new Point(20, 18);
+            lblUsersTitle.Name = "lblUsersTitle";
+            lblUsersTitle.Size = new Size(130, 20);
+            lblUsersTitle.TabIndex = 1;
+            lblUsersTitle.Text = "USER ACCOUNTS";
+            // 
+            // cardRates
+            // 
+            cardRates.BackColor = Color.FromArgb(40, 44, 52);
+            cardRates.Controls.Add(panel1);
+            cardRates.Controls.Add(dgvRates);
+            cardRates.Dock = DockStyle.Fill;
+            cardRates.ForeColor = Color.FromArgb(220, 225, 230);
+            cardRates.Location = new Point(489, 0);
+            cardRates.Margin = new Padding(7, 0, 0, 0);
+            cardRates.Name = "cardRates";
+            cardRates.Padding = new Padding(16, 0, 16, 16);
+            cardRates.Size = new Size(475, 511);
+            cardRates.TabIndex = 1;
+            // 
+            // panel1
+            // 
+            panel1.Controls.Add(btnSaveRate);
+            panel1.Controls.Add(txtRate);
+            panel1.Controls.Add(lblSelectedRate);
+            panel1.Dock = DockStyle.Top;
+            panel1.Location = new Point(16, 0);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(443, 125);
+            panel1.TabIndex = 6;
+            // 
+            // btnSaveRate
+            // 
+            btnSaveRate.Location = new Point(201, 18);
+            btnSaveRate.Name = "btnSaveRate";
+            btnSaveRate.Size = new Size(130, 40);
+            btnSaveRate.TabIndex = 4;
+            btnSaveRate.Text = "Save Rate";
+            btnSaveRate.UseVisualStyleBackColor = true;
+            // 
+            // txtRate
+            // 
+            txtRate.BackColor = Color.FromArgb(33, 37, 43);
+            txtRate.Location = new Point(15, 18);
+            txtRate.Name = "txtRate";
+            txtRate.PlaceholderText = "New rate";
+            txtRate.Size = new Size(150, 40);
+            txtRate.TabIndex = 3;
+            // 
+            // lblSelectedRate
+            // 
+            lblSelectedRate.AutoSize = true;
+            lblSelectedRate.Font = new Font("Segoe UI", 9F);
+            lblSelectedRate.ForeColor = Color.FromArgb(160, 168, 178);
+            lblSelectedRate.Location = new Point(15, 76);
+            lblSelectedRate.Name = "lblSelectedRate";
+            lblSelectedRate.Size = new Size(229, 20);
+            lblSelectedRate.TabIndex = 2;
+            lblSelectedRate.Text = "Select a service to change its rate";
+            // 
+            // dgvRates
+            // 
+            dgvRates.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvRates.Location = new Point(16, 0);
+            dgvRates.Name = "dgvRates";
+            dgvRates.RowHeadersWidth = 51;
+            dgvRates.Size = new Size(443, 495);
+            dgvRates.TabIndex = 5;
             // 
             // UsersForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
-            Controls.Add(grpUser);
-            Controls.Add(dgvUsers);
+            BackColor = Color.FromArgb(33, 37, 43);
+            ClientSize = new Size(1012, 623);
+            Controls.Add(pnlBody);
+            Controls.Add(pnlHeader);
             Name = "UsersForm";
             Text = "Users Form";
+            pnlHeader.ResumeLayout(false);
+            pnlHeader.PerformLayout();
+            pnlBody.ResumeLayout(false);
+            tblUsers.ResumeLayout(false);
+            cardUsers.ResumeLayout(false);
+            cardUsers.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dgvUsers).EndInit();
-            grpUser.ResumeLayout(false);
-            grpUser.PerformLayout();
+            pnlUserActions.ResumeLayout(false);
+            cardRates.ResumeLayout(false);
+            panel1.ResumeLayout(false);
+            panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvRates).EndInit();
             ResumeLayout(false);
         }
 
         #endregion
 
-        private DataGridView dgvUsers;
-        private GroupBox grpUser;
-        private TextBox txtPassword;
-        private Label label2;
-        private TextBox txtUsername;
-        private Label label1;
+        private Panel pnlHeader;
+        private Label lblTitle;
+        private Panel pnlHeaderLine;
+        private Button btnAddUser;
+        private Panel pnlBody;
+        private TableLayoutPanel tblUsers;
+        private UI.CardPanel cardUsers;
+        private UI.CardPanel cardRates;
+        private Panel pnlUserActions;
         private Button btnDeleteUser;
-        private Button btnCreateUser;
-        private Label label3;
-        private ComboBox cmbRole;
+        private Label lblUsersTitle;
+        private DataGridView dgvUsers;
+        private Button btnSaveRate;
+        private UI.InputBox txtRate;
+        private Label lblSelectedRate;
+        private DataGridView dgvRates;
+        private Panel panel1;
     }
 }
